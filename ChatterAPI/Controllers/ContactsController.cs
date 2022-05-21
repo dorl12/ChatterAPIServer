@@ -62,14 +62,15 @@ namespace ChatterAPI.Controllers
                 {
                     if (userChats.Chats.Where(x => x.ContactUserName.id == contact.id).FirstOrDefault() != null)
                     {
-                        return NotFound("Contact already exist!");
+                        return BadRequest("Contact already exist!");
                     }
-                    contact.last = null;
+                    contact.last = "";
                     contact.lastdate = new DateTime();
                     userChats.Chats.Add(new Chat() { ContactUserName = contact, Messages = new List<Message>() });
+                    return Ok("Contact Added");
                 }
             }
-            return Ok("Contact Added");
+            return Ok("nothing to say");
         }
 
         [HttpPut("{id}")]

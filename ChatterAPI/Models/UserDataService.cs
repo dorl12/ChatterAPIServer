@@ -5,7 +5,8 @@ namespace ChatterAPI
         public static List<User> _users = new List<User>(){
             new User() { Id = "yotam", Name = "Yotam Levin", Password = "yotam123", Image = "img1.jpg", Contacts = { } },
             new User() { Id = "or", Name = "Or Drukman", Password = "or123", Image = "img1.jpg", Contacts = { } },
-            new User() { Id = "dor", Name = "Dor Levi", Password = "dor123", Image = "img1.jpg", Contacts = { } }
+            new User() { Id = "dor", Name = "Dor Levi", Password = "dor123", Image = "img1.jpg", Contacts = { } },
+            new User() { Id = "gal", Name = "Gal Gadot", Password = "gal123", Image = "img1.jpg", Contacts = { } }
         };
 
 
@@ -51,7 +52,8 @@ namespace ChatterAPI
                                 ContactUserName = new Contact() { id = "yotam", name = "Yotam Levin", server = "localhost:7267", last = "I'm good, wanna play volleyball?", lastdate = new DateTime(2008, 5, 1, 8, 30, 52) },
                                 Messages = new List<Message>()
                                         {new Message() { id = 15, content = "What's up?? how are you doing?", created = new DateTime(2008, 5, 1, 8, 30, 52), sent = true},
-                                         new Message() { id = 200, content = "I'm good!!!!!!!!", created = new DateTime(2008, 5, 1, 8, 30, 52), sent = false}}}}}
+                                         new Message() { id = 200, content = "I'm good!!!!!!!!", created = new DateTime(2008, 5, 1, 8, 30, 52), sent = false}}}}},
+            new UserChats() { Username = "gal", Chats = new List<Chat>(){ } }
 
     };
 

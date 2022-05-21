@@ -17,21 +17,21 @@ namespace ChatterAPI.Controllers
         }
 
 
-        [HttpPost("{id}&{password}")]
-        public IActionResult Post(string id, string password)
+        [HttpPost]
+        public IActionResult Post([Bind("Id, Password")] User u)
         {
             System.Diagnostics.Debug.WriteLine("Login");
             foreach (User usr in UserDataService._users)
             {
-                if (usr.Id == id)
+                if (usr.Id == u.Id)
                 {
-                    if (usr.Password == password)
+                    if (usr.Password == u.Password)
                     {
                         var claims = new[] {
                                 new Claim(JwtRegisteredClaimNames.Sub, _configuration["JWTParams:Subject"]),
                                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                                new Claim("UserId", id)
+                                new Claim("UserId", u.Id)
                             };
                         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtParams:SecretKey"]));
                         var mac = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
