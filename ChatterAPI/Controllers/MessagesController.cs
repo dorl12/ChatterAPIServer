@@ -62,6 +62,7 @@ namespace ChatterAPI.Controllers
         public IActionResult Create([Bind("content")] Message message, string contact)
         {
             message.sent = true;
+            message.created = DateTime.Now;
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             //string userId = "or";
             foreach (UserChats userChats in UserDataService._AllUsersChats)
@@ -74,6 +75,8 @@ namespace ChatterAPI.Controllers
                         {
                             message.id = MessageID++;
                             chat.Messages.Add(message);
+                            chat.ContactUserName.last = message.content;
+                            chat.ContactUserName.lastdate = message.created;
                             return Ok("Success!");
                         }
                     }
