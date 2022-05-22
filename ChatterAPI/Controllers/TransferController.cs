@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ChatterAPI.Hubs;
 
 namespace ChatterAPI.Controllers
 {
@@ -6,8 +7,12 @@ namespace ChatterAPI.Controllers
     [Route("api/[controller]")]
     public class TransferController : ControllerBase
     {
+        private readonly ChatHub chatHub;
+
+        public TransferController(ChatHub c) { chatHub = c; }
+
         [HttpPost]
-        public IActionResult Create([Bind("to,from,content")] Transfer transfer)
+        public async Task<IActionResult> Create([Bind("to,from,content")] Transfer transfer)
         {
             Message message = new Message();
             message.sent = false;
@@ -25,6 +30,7 @@ namespace ChatterAPI.Controllers
                             chat.Messages.Add(message);
                             chat.ContactUserName.last = message.content;
                             chat.ContactUserName.lastdate = message.created;
+                            await chatHub.SendMessage(transfer.content);
                             return Ok("Success!");
                         }
                     }
