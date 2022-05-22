@@ -6,7 +6,7 @@ namespace ChatterAPI.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/Contacts/{contact}/[controller]")]
+    [Route("api/Contacts/{contact}/[messages]")]
     public class MessagesController : ControllerBase
     {
         private static int MessageID = 0;
@@ -15,7 +15,6 @@ namespace ChatterAPI.Controllers
         public IActionResult Index(string contact)
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            //string userId = "or";
 
             foreach (UserChats userChats in UserDataService._AllUsersChats)
             {
@@ -37,7 +36,6 @@ namespace ChatterAPI.Controllers
         public IActionResult Detailes(string contact, int m_id)
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            //string userId = "or";
             foreach (UserChats userChats in UserDataService._AllUsersChats)
             {
                 if (userChats.Username == userId)
@@ -64,7 +62,6 @@ namespace ChatterAPI.Controllers
             message.sent = true;
             message.created = DateTime.Now;
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            //string userId = "or";
             foreach (UserChats userChats in UserDataService._AllUsersChats)
             {
                 if (userChats.Username == userId)
@@ -89,7 +86,6 @@ namespace ChatterAPI.Controllers
         public IActionResult Update([Bind("content")] Message message, string contact, int? m_id)
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            //string userId = "or";
             foreach (UserChats userChats in UserDataService._AllUsersChats)
             {
                 if (userChats.Username == userId)
@@ -118,7 +114,6 @@ namespace ChatterAPI.Controllers
         public IActionResult Delete(string contact, int? m_id)
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            //string userId = "or";
             foreach (UserChats userChats in UserDataService._AllUsersChats)
             {
                 if (userChats.Username == userId)

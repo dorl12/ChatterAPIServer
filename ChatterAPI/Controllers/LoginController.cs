@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ChatterAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[login]")]
     [ApiController]
     public class LoginController : ControllerBase
     {

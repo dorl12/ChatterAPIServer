@@ -4,7 +4,7 @@ using ChatterAPI.Hubs;
 namespace ChatterAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[transfer]")]
     public class TransferController : ControllerBase
     {
         private readonly ChatHub chatHub;
