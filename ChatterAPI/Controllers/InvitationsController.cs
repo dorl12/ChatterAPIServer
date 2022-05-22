@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ChatterAPI.Controllers;
+using ChatterAPI.Hubs;
 
 namespace ChatterAPI.Controllers
 {
@@ -7,8 +8,12 @@ namespace ChatterAPI.Controllers
     [Route("api/[controller]")]
     public class InvitationsController : ControllerBase
     {
+        private readonly ChatHub chatHub;
+
+        public InvitationsController(ChatHub c) { chatHub = c; }
+
         [HttpPost]
-        public IActionResult Invite([Bind("from,to,server")] Invitations inv)
+        public async Task<IActionResult> Invite([Bind("from,to,server")] Invitations inv)
         {
             foreach (UserChats userChats in UserDataService._AllUsersChats)
             {
@@ -24,6 +29,7 @@ namespace ChatterAPI.Controllers
                     c.server = inv.server;
                     c.last = "";
                     c.lastdate = new DateTime();
+                    await chatHub.SendMessage(inv.from);
                     userChats.Chats.Add(new Chat() { ContactUserName = c, Messages = new List<Message>() });
                     return Ok("invitation - Contact Added");
                 }
