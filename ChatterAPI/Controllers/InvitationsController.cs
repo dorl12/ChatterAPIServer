@@ -5,7 +5,7 @@ using ChatterAPI.Hubs;
 namespace ChatterAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/invitations")]
     public class InvitationsController : ControllerBase
     {
         private readonly ChatHub chatHub;

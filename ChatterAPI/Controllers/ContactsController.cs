@@ -4,7 +4,7 @@ namespace ChatterAPI.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/contacts")]
     public class ContactsController : ControllerBase
     {
         //public static List<Contact> _contacts = new List<Contact>()

@@ -6,7 +6,7 @@ namespace ChatterAPI.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/Contacts/{contact}/[controller]")]
+    [Route("api/contacts/{contact}/messages")]
     public class MessagesController : ControllerBase
     {
         private static int MessageID = 0;
