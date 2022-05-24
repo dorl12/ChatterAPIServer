@@ -17,35 +17,31 @@ namespace ChatterAPI.Controllers
             _configuration = config;
         }
 
-        [HttpPost("{id}&{password}&{repeatPassword}&{nickname}")]
-        public IActionResult Post(string id, string password, string repeatPassword, string nickname)
+        [HttpPost]
+        public IActionResult Post([Bind("Id, Password, Name")] User u)
         {
             System.Diagnostics.Debug.WriteLine("Register");
             foreach (User usr in UserDataService._users)
             {
-                if (usr.Id == id)
+                if (usr.Id == u.Id)
                 {
                     return BadRequest("Username already exist");
                 }
             }
-            if(id.Length == 0 || password.Length == 0 || repeatPassword.Length == 0 || nickname.Length == 0) {
-                return BadRequest("Empty fill is not Allowed");
+            if(u.Id.Length == 0 || u.Password.Length == 0 || u.Name.Length == 0) {
+                return BadRequest("Empty fields are not Allowed");
             }
-            if (password != repeatPassword)
-            {
-                return BadRequest("password and repeatPassword most be the same");
-            }
-            bool containsInt = password.Any(char.IsDigit);
-            bool containsLetter = password.Any(char.IsLetter);
+            bool containsInt = u.Password.Any(char.IsDigit);
+            bool containsLetter = u.Password.Any(char.IsLetter);
             if(!(containsInt && containsLetter))
             {
                 return BadRequest("password must contains letters and digits");
             }
 
             User newUser = new User();
-            newUser.Id = id;
-            newUser.Password = password;
-            newUser.Name = nickname;
+            newUser.Id = u.Id;
+            newUser.Password = u.Password;
+            newUser.Name = u.Name;
             //newUser.Image = profileImage;
             UserDataService._users.Add(newUser);
             UserChats uC = new UserChats();
@@ -56,7 +52,7 @@ namespace ChatterAPI.Controllers
                                 new Claim(JwtRegisteredClaimNames.Sub, _configuration["JWTParams:Subject"]),
                                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                                new Claim("UserId", id)
+                                new Claim("UserId", u.Id)
                             };
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtParams:SecretKey"]));
             var mac = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
