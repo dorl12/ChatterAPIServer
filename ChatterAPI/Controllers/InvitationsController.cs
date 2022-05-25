@@ -19,6 +19,10 @@ namespace ChatterAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Invite([Bind("from,to,server")] Invitations inv)
         {
+            if (inv.from == inv.to)
+            {
+                return BadRequest("Can not chat with yourself!");
+            }
             foreach (UserChats userChats in _userDataService.GetAllUsersChats())
             {
                 if (userChats.Username == inv.to)
