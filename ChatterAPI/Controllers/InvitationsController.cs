@@ -8,13 +8,18 @@ namespace ChatterAPI.Controllers
     public class InvitationsController : ControllerBase
     {
         private readonly ChatHub chatHub;
+        private readonly IUserDataService _userDataService;
 
-        public InvitationsController(ChatHub c) { chatHub = c; }
+        public InvitationsController(ChatHub c, IUserDataService userDataService)
+        {
+            chatHub = c;
+            _userDataService = userDataService;
+        }
 
         [HttpPost]
         public async Task<IActionResult> Invite([Bind("from,to,server")] Invitations inv)
         {
-            foreach (UserChats userChats in UserDataService._AllUsersChats)
+            foreach (UserChats userChats in _userDataService.GetAllUsersChats())
             {
                 if (userChats.Username == inv.to)
                 {

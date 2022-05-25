@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ChatterAPI.Hubs;
+using ChatterAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +40,7 @@ builder.Services.AddCors(options =>
             });
 });
 
+builder.Services.AddScoped<IUserDataService, UserDataService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

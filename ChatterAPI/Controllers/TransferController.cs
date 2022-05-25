@@ -8,8 +8,13 @@ namespace ChatterAPI.Controllers
     public class TransferController : ControllerBase
     {
         private readonly ChatHub chatHub;
+        private readonly IUserDataService _userDataService;
 
-        public TransferController(ChatHub c) { chatHub = c; }
+        public TransferController(ChatHub c, IUserDataService userDataService)
+        {
+            chatHub = c;
+            _userDataService = userDataService;
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create([Bind("to,from,content")] Transfer transfer)
@@ -18,7 +23,7 @@ namespace ChatterAPI.Controllers
             message.sent = false;
             message.created = DateTime.Now;
             message.content = transfer.content;
-            foreach (UserChats userChats in UserDataService._AllUsersChats)
+            foreach (UserChats userChats in _userDataService.GetAllUsersChats())
             {
                 if (userChats.Username == transfer.to)
                 {

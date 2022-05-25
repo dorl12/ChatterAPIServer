@@ -7,12 +7,19 @@ namespace ChatterAPI.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
+        private readonly IUserDataService _userDataService;
+
+        public UsersController(IUserDataService userDataService)
+        {
+            _userDataService = userDataService;
+        }
+
         [HttpGet]
         public IActionResult Index()
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type.EndsWith("UserId"))?.Value;
             
-            foreach (User user in UserDataService._users)
+            foreach (User user in _userDataService.GetAllUsers())
             {
                 if (user.Id == userId)
                 {
@@ -25,7 +32,7 @@ namespace ChatterAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult Detailes(string? id)
         {
-            foreach (User user in UserDataService._users)
+            foreach (User user in _userDataService.GetAllUsers())
             {
                 if (user.Id == id)
                 {
@@ -34,5 +41,4 @@ namespace ChatterAPI.Controllers
             }
             return NotFound("User not found");
         }
-    };
-}
+    }}

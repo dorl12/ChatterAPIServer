@@ -11,17 +11,17 @@ namespace ChatterAPI.Controllers
     public class LoginController : ControllerBase
     {
         public IConfiguration _configuration;
-        public LoginController(IConfiguration config)
+        private readonly IUserDataService _userDataService;
+        public LoginController(IConfiguration config, IUserDataService userDataService)
         {
             _configuration = config;
+            _userDataService = userDataService;
         }
-
 
         [HttpPost]
         public IActionResult Post([Bind("Id, Password")] User u)
         {
-            System.Diagnostics.Debug.WriteLine("Login");
-            foreach (User usr in UserDataService._users)
+            foreach (User usr in _userDataService.GetAllUsers())
             {
                 if (usr.Id == u.Id)
                 {
@@ -44,11 +44,9 @@ namespace ChatterAPI.Controllers
 
                         return Ok(new JwtSecurityTokenHandler().WriteToken(token));
                     }
-                    System.Diagnostics.Debug.WriteLine("NotFP");
                     return NotFound("Password Incorrect!");
                 }
             }
-            System.Diagnostics.Debug.WriteLine("NotFU");
             return NotFound("Username does not exist!");
         }
     }

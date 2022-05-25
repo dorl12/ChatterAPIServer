@@ -11,16 +11,17 @@ namespace ChatterAPI.Controllers
     public class RegisterController : ControllerBase
     {
         public IConfiguration _configuration;
-        public RegisterController(IConfiguration config)
+        private readonly IUserDataService _userDataService;
+        public RegisterController(IConfiguration config, IUserDataService userDataService)
         {
             _configuration = config;
+            _userDataService = userDataService;
         }
 
         [HttpPost]
         public IActionResult Post([Bind("Id, Password, Name")] User u)
         {
-            System.Diagnostics.Debug.WriteLine("Register");
-            foreach (User usr in UserDataService._users)
+            foreach (User usr in _userDataService.GetAllUsers())
             {
                 if (usr.Id == u.Id)
                 {
@@ -41,11 +42,11 @@ namespace ChatterAPI.Controllers
             newUser.Id = u.Id;
             newUser.Password = u.Password;
             newUser.Name = u.Name;
-            UserDataService._users.Add(newUser);
+            _userDataService.AddNewUser(newUser);
             UserChats uC = new UserChats();
             uC.Username = newUser.Id;
             uC.Chats = new List<Chat>();
-            UserDataService._AllUsersChats.Add(uC);
+            _userDataService.AddUserChats(uC);
             var claims = new[] {
                                 new Claim(JwtRegisteredClaimNames.Sub, _configuration["JWTParams:Subject"]),
                                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),

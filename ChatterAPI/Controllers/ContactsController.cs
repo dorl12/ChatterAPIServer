@@ -7,14 +7,19 @@ namespace ChatterAPI.Controllers
     [Route("api/contacts")]
     public class ContactsController : ControllerBase
     {
+        private readonly IUserDataService _userDataService;
+
+        public ContactsController(IUserDataService userDataService)
+        {
+            _userDataService = userDataService;
+        }
 
         [HttpGet]
         public IEnumerable<Contact> Index()
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type.EndsWith("UserId"))?.Value;
-            System.Diagnostics.Debug.WriteLine(userId);
             List<Contact> allContacts = new List<Contact>();
-            foreach (UserChats userChats in UserDataService._AllUsersChats)
+            foreach (UserChats userChats in _userDataService.GetAllUsersChats())
             {
                 if (userChats.Username == userId)
                 {
@@ -32,7 +37,7 @@ namespace ChatterAPI.Controllers
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             Chat toFind = new Chat();
-            foreach (UserChats userChats in UserDataService._AllUsersChats)
+            foreach (UserChats userChats in _userDataService.GetAllUsersChats())
             {
                 if (userChats.Username == userId)
                 {
@@ -50,7 +55,7 @@ namespace ChatterAPI.Controllers
         public IActionResult Create([Bind("name,server,last,lastdate")] Contact contact)
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            foreach (UserChats userChats in UserDataService._AllUsersChats)
+            foreach (UserChats userChats in _userDataService.GetAllUsersChats())
             {
                 if (userChats.Username == userId)
                 {
@@ -71,7 +76,7 @@ namespace ChatterAPI.Controllers
         public IActionResult Update([Bind("name,server")] Contact contact, string? id)
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            foreach (UserChats userChats in UserDataService._AllUsersChats)
+            foreach (UserChats userChats in _userDataService.GetAllUsersChats())
             {
                 if (userChats.Username == userId)
                 {
@@ -92,7 +97,7 @@ namespace ChatterAPI.Controllers
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             Chat toFind = new Chat();
-            foreach (UserChats userChats in UserDataService._AllUsersChats)
+            foreach (UserChats userChats in _userDataService.GetAllUsersChats())
             {
                 if (userChats.Username == userId)
                 {
@@ -107,5 +112,4 @@ namespace ChatterAPI.Controllers
             }
             return Ok("Contact deleted");
         }
-    };
-}
+    }}

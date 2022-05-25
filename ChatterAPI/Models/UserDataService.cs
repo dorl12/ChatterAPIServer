@@ -1,6 +1,14 @@
 namespace ChatterAPI
 {
-    public class UserDataService
+    public interface IUserDataService
+    {
+        IEnumerable<UserChats> GetAllUsersChats();
+        void AddUserChats(UserChats userChats);
+        IEnumerable<User> GetAllUsers();
+        void AddNewUser(User user);
+
+    }
+    public class UserDataService : IUserDataService
     {
         public static List<User> _users = new List<User>(){
             new User() { Id = "yotam", Name = "Yotam Levin", Password = "yotam123", Image = "img1.jpg", Contacts = { } },
@@ -45,6 +53,26 @@ namespace ChatterAPI
                                          new Message() { id = 200, content = "I'm good!!!!!!!!", created = new DateTime(2008, 5, 1, 8, 30, 52), sent = false}}}}},
             new UserChats() { Username = "gal", Chats = new List<Chat>(){ } }
 
-    };
+        };
+
+        public IEnumerable<UserChats> GetAllUsersChats()
+        {
+            return _AllUsersChats;
+        }
+
+        public void AddUserChats(UserChats userChats)
+        {
+            _AllUsersChats.Add(userChats);
+        }
+
+        public IEnumerable<User> GetAllUsers()
+        {
+            return _users;
+        }
+
+        public void AddNewUser(User user)
+        {
+            _users.Add(user);
+        }
     }
 }
