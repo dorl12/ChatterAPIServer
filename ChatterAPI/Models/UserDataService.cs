@@ -9,16 +9,6 @@ namespace ChatterAPI
             new User() { Id = "gal", Name = "Gal Gadot", Password = "gal123", Image = "img1.jpg", Contacts = { } }
         };
 
-
-        //public static List<Chat> _chats = new List<Chat>(){
-        //    new Chat() {Username = "or", Messages = new List<Message>()
-        //        {new Message() { id = 22, content = "Hi, how are you doing?", created = new DateTime(2008, 5, 1, 8, 30, 52), sent = false},
-        //         new Message() { id = 18, content = "I'm good, wanna play volleyball?", created = new DateTime(2008, 5, 1, 8, 30, 52), sent = true}}},
-        //    new Chat() {Username = "dor", Messages = new List<Message>()
-        //        {new Message() { id = 8, content = "What's up?? how are you doing?", created = new DateTime(2008, 5, 1, 8, 30, 52), sent = false},
-        //         new Message() { id = 928, content = "I'm good!!!!!!!!", created = new DateTime(2008, 5, 1, 8, 30, 52), sent = true}}}
-        //};
-
         public static List<UserChats> _AllUsersChats = new List<UserChats>(){
             new UserChats() { Username = "or", Chats = new List<Chat>(){
                             new Chat() {
@@ -56,16 +46,5 @@ namespace ChatterAPI
             new UserChats() { Username = "gal", Chats = new List<Chat>(){ } }
 
     };
-
-        
-        static UserDataService()
-        {
-            //UserDataService._chats = new List<Chat>();
-            //UserDataService._chats.Add(new Chat() {Username = "or", Messages = new List<Message>() {new Message() { id = 1, content = "Hi, how are you doing?", created = new DateTime(2008, 5, 1, 8, 30, 52), sent = false},
-            // new Message() { id = 18, content = "I'm good, wanna play volleyball?", created = new DateTime(2008, 5, 1, 8, 30, 52), sent = true}}});
-            //UserDataService._contacts = new List<Contact>();
-            //UserDataService._contacts.Add(new Contact() { id = "or", name = "Or Drukman", server = "localhost:7265", last = "text", lastdate = new DateTime(2008, 5, 1, 8, 30, 52) });
-        }
-
     }
 }

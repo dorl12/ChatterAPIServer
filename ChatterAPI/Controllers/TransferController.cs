@@ -38,6 +38,5 @@ namespace ChatterAPI.Controllers
             }
             return NotFound("Contact does not exist!");
         }
-
     };
 }

@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.AspNetCore.Authorization;
 namespace ChatterAPI.Hubs
 {
     public class ChatHub : Hub

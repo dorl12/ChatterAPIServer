@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -42,7 +41,6 @@ namespace ChatterAPI.Controllers
             newUser.Id = u.Id;
             newUser.Password = u.Password;
             newUser.Name = u.Name;
-            //newUser.Image = profileImage;
             UserDataService._users.Add(newUser);
             UserChats uC = new UserChats();
             uC.Username = newUser.Id;

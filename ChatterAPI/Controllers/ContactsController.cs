@@ -7,16 +7,12 @@ namespace ChatterAPI.Controllers
     [Route("api/contacts")]
     public class ContactsController : ControllerBase
     {
-        //public static List<Contact> _contacts = new List<Contact>()
-            //{new Contact() { id = "or", name = "Or Drukman", server = "localhost:7265", last = "text", lastdate = new DateTime(2008, 5, 1, 8, 30, 52) } };
-
 
         [HttpGet]
         public IEnumerable<Contact> Index()
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type.EndsWith("UserId"))?.Value;
             System.Diagnostics.Debug.WriteLine(userId);
-            //string userId = "or";
             List<Contact> allContacts = new List<Contact>();
             foreach (UserChats userChats in UserDataService._AllUsersChats)
             {
@@ -35,7 +31,6 @@ namespace ChatterAPI.Controllers
         public IActionResult Detailes(string? id)
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            //string userId = "or";
             Chat toFind = new Chat();
             foreach (UserChats userChats in UserDataService._AllUsersChats)
             {
@@ -55,7 +50,6 @@ namespace ChatterAPI.Controllers
         public IActionResult Create([Bind("name,server,last,lastdate")] Contact contact)
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            //string userId = "or";
             foreach (UserChats userChats in UserDataService._AllUsersChats)
             {
                 if (userChats.Username == userId)
@@ -77,7 +71,6 @@ namespace ChatterAPI.Controllers
         public IActionResult Update([Bind("name,server")] Contact contact, string? id)
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            //string userId = "or";
             foreach (UserChats userChats in UserDataService._AllUsersChats)
             {
                 if (userChats.Username == userId)
@@ -98,7 +91,6 @@ namespace ChatterAPI.Controllers
         public IActionResult Delete(string? id)
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            //string userId = "or";
             Chat toFind = new Chat();
             foreach (UserChats userChats in UserDataService._AllUsersChats)
             {

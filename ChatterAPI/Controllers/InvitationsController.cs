@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using ChatterAPI.Controllers;
 using ChatterAPI.Hubs;
 
 namespace ChatterAPI.Controllers
