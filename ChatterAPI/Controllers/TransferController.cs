@@ -36,7 +36,7 @@ namespace ChatterAPI.Controllers
                             chat.ContactUserName.last = message.content;
                             chat.ContactUserName.lastdate = message.created;
                             await chatHub.SendMessage(transfer.content);
-                            return Ok("Success!");
+                            return Created("Message sent succesfully!", message);
                         }
                     }
                 }

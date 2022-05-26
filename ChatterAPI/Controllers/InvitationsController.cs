@@ -39,10 +39,10 @@ namespace ChatterAPI.Controllers
                     c.lastdate = new DateTime();
                     await chatHub.SendMessage(inv.from);
                     userChats.Chats.Add(new Chat() { ContactUserName = c, Messages = new List<Message>() });
-                    return Ok("invitation - Contact Added");
+                    return Created("invitation - Contact Added", c);
                 }
             }
-            return NotFound("Username not in this server");
+            return NotFound("Username does not in this server");
         }
     };
 }

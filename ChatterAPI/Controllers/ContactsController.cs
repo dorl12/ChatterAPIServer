@@ -15,7 +15,7 @@ namespace ChatterAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Contact> Index()
+        public IActionResult Index()
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type.EndsWith("UserId"))?.Value;
             List<Contact> allContacts = new List<Contact>();
@@ -29,7 +29,7 @@ namespace ChatterAPI.Controllers
                     }
                 }
             }
-            return allContacts;
+            return Ok(allContacts);
         }
 
         [HttpGet("{id}")]
@@ -66,10 +66,10 @@ namespace ChatterAPI.Controllers
                     contact.last = "";
                     contact.lastdate = new DateTime();
                     userChats.Chats.Add(new Chat() { ContactUserName = contact, Messages = new List<Message>() });
-                    return Ok("Contact Added");
+                    return Created("Contact Added", contact);
                 }
             }
-            return Ok("nothing to say");
+            return Ok("");
         }
 
         [HttpPut("{id}")]
@@ -83,13 +83,13 @@ namespace ChatterAPI.Controllers
                     Contact c = userChats.Chats.Where(x => x.ContactUserName.id == id).FirstOrDefault().ContactUserName;
                     if (c == null)
                     {
-                        return NotFound("Contact not found exist!");
+                        return NotFound("Contact does not exist!");
                     }
                     c.name = contact.name;
                     c.server = contact.server;
                 }
             }
-            return Ok("Contact updated");
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -110,6 +110,6 @@ namespace ChatterAPI.Controllers
                     break;
                 }
             }
-            return Ok("Contact deleted");
+            return NoContent();
         }
     }}

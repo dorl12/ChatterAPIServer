@@ -80,7 +80,7 @@ namespace ChatterAPI.Controllers
                             chat.Messages.Add(message);
                             chat.ContactUserName.last = message.content;
                             chat.ContactUserName.lastdate = message.created;
-                            return Ok("Success!");
+                            return Created("Message Added", message);
                         }
                     }
                 }
@@ -105,7 +105,7 @@ namespace ChatterAPI.Controllers
                                 if (mes.id == m_id)
                                 {
                                     mes.content = message.content;
-                                    return Ok("Success!");
+                                    NoContent();
                                 }
                             }
                             return NotFound("Message does not exist!");
@@ -133,7 +133,7 @@ namespace ChatterAPI.Controllers
                                 if (mes.id == m_id)
                                 {
                                     chat.Messages.Remove(mes);
-                                    return Ok("Success!");
+                                    return NoContent();
                                 }
                             }
                             return NotFound("Message does not exist!");
