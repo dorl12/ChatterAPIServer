@@ -1,3 +1,4 @@
+# !!!FOR EXCERCISE 2 PLEASE ADDRESS TO THE 'ex2' BRANCH!!!
 # ChatterAPI
 
 The API server for the Chatter app.
