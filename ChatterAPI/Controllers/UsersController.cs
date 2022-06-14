@@ -7,21 +7,22 @@ namespace ChatterAPI.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly IUserDataService _userDataService;
+        //private readonly IUserDataService _userDataService;
+        private IUserModel userModel = new UserModel();
 
-        public UsersController(IUserDataService userDataService)
-        {
-            _userDataService = userDataService;
-        }
+        //public UsersController(IUserDataService userDataService)
+        //{
+        //    //_userDataService = userDataService;
+        //}
 
         [HttpGet]
         public IActionResult Index()
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type.EndsWith("UserId"))?.Value;
             
-            foreach (User user in _userDataService.GetAllUsers())
+            foreach (User user in userModel.GetAllUsers())
             {
-                if (user.Id == userId)
+                if (user.id == userId)
                 {
                     return Ok(user);
                 }
@@ -32,9 +33,9 @@ namespace ChatterAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult Detailes(string? id)
         {
-            foreach (User user in _userDataService.GetAllUsers())
+            foreach (User user in userModel.GetAllUsers())
             {
-                if (user.Id == id)
+                if (user.id == id)
                 {
                     return Ok(user);
                 }
