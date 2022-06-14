@@ -2,7 +2,7 @@
 {
     public class Chat
     {
-        public Contact ContactUserName { get; set; }
-        public List<Message>? Messages { get; set; }
+        public Contact contactUserName { get; set; }
+        public List<Message>? messages { get; set; }
     }
 }

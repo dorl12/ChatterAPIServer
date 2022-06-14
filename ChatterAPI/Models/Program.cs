@@ -40,7 +40,7 @@ builder.Services.AddCors(options =>
             });
 });
 
-builder.Services.AddScoped<IUserDataService, UserDataService>();
+//builder.Services.AddScoped<IUserDataService, UserDataService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -51,7 +51,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("Allow All");
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 

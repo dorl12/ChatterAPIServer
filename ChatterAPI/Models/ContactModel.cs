@@ -8,6 +8,7 @@ namespace ChatterAPI
         Contact GetContact(string id);
         void AddContact(Contact contact);
         void UpdateContact(Contact contact, string id);
+        void UpdateLastMessage(string id, string lastMessage, DateTime created);
         void DeleteContact(string id);
     }
     public class ContactModel : IContactModel
@@ -37,6 +38,14 @@ namespace ChatterAPI
         {
             using (var db = new UsersContext())
             {
+                List<Contact> contacts = db.Contacts.ToList();
+                foreach(var c in contacts)
+                {
+                    if(c.id == contact.id)
+                    {
+                        return;
+                    }
+                }
                 db.Contacts.Add(contact);
                 db.SaveChanges();
             }
@@ -50,8 +59,22 @@ namespace ChatterAPI
                 Contact c = db.Contacts.Find(id);
                 c.name = contact.name;
                 c.server = contact.server;
+                db.SaveChanges();
             }
         }
+
+        // Update Last Message
+        public void UpdateLastMessage(string id, string lastMessage, DateTime created)
+        {
+            using (var db = new UsersContext())
+            {
+                Contact c = db.Contacts.Find(id);
+                c.last = lastMessage;
+                c.lastdate = created;
+                db.SaveChanges();
+            }
+        }
+
 
         // Delete Contact
         public void DeleteContact(string id)

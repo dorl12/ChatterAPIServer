@@ -2,7 +2,7 @@
 {
     public class UserChats
     {
-        public string Username { get; set; }
-        public List<Chat> Chats { get; set; }
+        public string username { get; set; }
+        public List<Chat> chats { get; set; }
     }
 }

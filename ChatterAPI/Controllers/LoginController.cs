@@ -11,27 +11,28 @@ namespace ChatterAPI.Controllers
     public class LoginController : ControllerBase
     {
         public IConfiguration _configuration;
-        private readonly IUserDataService _userDataService;
-        public LoginController(IConfiguration config, IUserDataService userDataService)
+        //private readonly IUserDataService _userDataService;
+        private IUserModel userModel = new UserModel();
+        public LoginController(IConfiguration config)
         {
             _configuration = config;
-            _userDataService = userDataService;
+            //_userDataService = userDataService;
         }
 
         [HttpPost]
         public IActionResult Post([Bind("Id, Password")] User u)
         {
-            foreach (User usr in _userDataService.GetAllUsers())
+            foreach (User usr in userModel.GetAllUsers())
             {
-                if (usr.Id == u.Id)
+                if (usr.id == u.id)
                 {
-                    if (usr.Password == u.Password)
+                    if (usr.password == u.password)
                     {
                         var claims = new[] {
                                 new Claim(JwtRegisteredClaimNames.Sub, _configuration["JWTParams:Subject"]),
                                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                                new Claim("UserId", u.Id)
+                                new Claim("UserId", u.id)
                             };
                         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtParams:SecretKey"]));
                         var mac = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
