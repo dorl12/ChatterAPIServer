@@ -21,6 +21,8 @@ namespace ChatterAPI.Controllers
         [HttpPost]
         public IActionResult Post([Bind("Id, Password")] User u)
         {
+            Console.WriteLine("HERE??????????????");
+
             foreach (User usr in _userDataService.GetAllUsers())
             {
                 if (usr.Id == u.Id)
@@ -42,12 +44,12 @@ namespace ChatterAPI.Controllers
                             expires: DateTime.UtcNow.AddMinutes(20),
                             signingCredentials: mac);
 
-                        return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                        return NotFound(new JwtSecurityTokenHandler().WriteToken(token));
                     }
-                    return NotFound("Password Incorrect!");
+                    return BadRequest("Password Incorrect!");
                 }
             }
-            return NotFound("Username does not exist!");
+            return BadRequest("Username does not exist!");
         }
     }
 }

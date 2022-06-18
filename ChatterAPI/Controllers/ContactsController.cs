@@ -52,7 +52,7 @@ namespace ChatterAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([Bind("name,server,last,lastdate")] Contact contact)
+        public IActionResult Create([Bind("id,name,server,last,lastdate")] Contact contact)
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             foreach (UserChats userChats in _userDataService.GetAllUsersChats())

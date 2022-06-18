@@ -30,7 +30,9 @@ namespace ChatterAPI.Controllers
                     {
                         if (chat.ContactUserName.id == contact)
                         {
-                            return Ok(chat.Messages);
+                            List<Message> messages = new List<Message>(chat.Messages);
+                         
+                            return Ok(messages);
                         }
                     }
                 }
@@ -54,7 +56,7 @@ namespace ChatterAPI.Controllers
                             {
                                 return NotFound("Message does not exist!");
                             }
-                            return Ok(chat.Messages.Where(x => x.id == m_id).FirstOrDefault());
+                            return NotFound(chat.Messages.Where(x => x.id == m_id).FirstOrDefault());
                         }
                     }
                 }
