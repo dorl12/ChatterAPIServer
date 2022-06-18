@@ -2,10 +2,10 @@
 {
     public class User
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Password { get; set; }
-        public string Image { get; set; }
-        public List<Contact> Contacts { get; set; }
+        public string id { get; set; }
+        public string name { get; set; }
+        public string password { get; set; }
+        public string image { get; set; }
+        //public List<Contact> Contacts { get; set; }
     }
 }

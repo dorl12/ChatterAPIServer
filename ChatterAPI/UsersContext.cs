@@ -18,14 +18,17 @@ namespace ChatterDB
             // key of the Items table
             //modelBuilder.Entity<Chat>().HasKey(e => e.ContactUserName);
             modelBuilder.Entity<Contact>().HasKey(e => e.id);
-            modelBuilder.Entity<Message>().HasKey(e => e.id);
-            modelBuilder.Entity<User>().HasKey(e => e.Id);
+            modelBuilder.Entity<MessageDB>().HasKey(e => e.id);
+            modelBuilder.Entity<User>().HasKey(e => e.id);
+            modelBuilder.Entity<UserContacts>().HasKey(e => e.id);
+            modelBuilder.Entity<ChatMessages>().HasKey(e => e.id);
         }
 
-        //public DbSet<Chat> Chats { get; set; }
         public DbSet<Contact> Contacts { get; set; }
-        public DbSet<Message> Messages { get; set; }
+        public DbSet<MessageDB> Messages { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserContacts> UsersContacts { get; set; }
+        public DbSet<ChatMessages> ChatMessages { get; set; }
 
     }
 }
