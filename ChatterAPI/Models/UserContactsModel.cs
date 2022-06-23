@@ -6,6 +6,7 @@ namespace ChatterAPI
     {
         List<UserContacts> GetAllUsersContacts();
         List<string> GetAllUserContacts(string userId);
+        public List<int> GetAllUserContactLastMessage(string userId);
         void AddContactToUser(String contactId, string userId);
         void UpdateContact(int id, int lastMessageId);
         void DeleteContactFromUser(string id, string userId);
@@ -13,6 +14,18 @@ namespace ChatterAPI
     public class UserContactsModel : IUserContactsModel
     {
         private static int idCounter = 0;
+
+        public UserContactsModel()
+        {
+            using (var db = new UsersContext())
+            {
+                List<UserContacts> lst = db.UsersContacts.ToList();
+                if (lst.Count > 0)
+                {
+                    idCounter = lst.Count;
+                }
+            }
+        }
 
         // Get all contacts of all users
         public List<UserContacts> GetAllUsersContacts()
@@ -28,10 +41,10 @@ namespace ChatterAPI
         {
             using (var db = new UsersContext())
             {
-                if(idCounter == 0)
-                {
-                    return new List<string>();
-                }
+                //if(idCounter == 0)
+                //{
+                //    return new List<string>();
+                //}
                 var usersContactsList = db.UsersContacts.ToList();
                 List<string> contacts = new List<string>();
                 foreach(var contact in usersContactsList)
@@ -42,6 +55,28 @@ namespace ChatterAPI
                     }
                 }
                 return contacts;
+            }
+        }
+
+        // Get all last messages of the connected User and contacts
+        public List<int> GetAllUserContactLastMessage(string userId)
+        {
+            using (var db = new UsersContext())
+            {
+                //if(idCounter == 0)
+                //{
+                //    return new List<string>();
+                //}
+                var usersContactsList = db.UsersContacts.ToList();
+                List<int> messages = new List<int>();
+                foreach (var contact in usersContactsList)
+                {
+                    if (contact.userId == userId)
+                    {
+                        messages.Add(contact.lastMessageId);
+                    }
+                }
+                return messages;
             }
         }
 

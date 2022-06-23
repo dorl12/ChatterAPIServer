@@ -56,10 +56,10 @@ namespace ChatterAPI.Controllers
                     messageDBs.Add(m);
                 }
             }
-            List<Message> messages = new List<Message>();
+            List<MessageEntity> messages = new List<MessageEntity>();
             foreach(var messageDB in messageDBs)
             {
-                Message message = new Message();
+                MessageEntity message = new MessageEntity();
                 message.id = messageDB.id;
                 message.content = messageDB.content;
                 message.created = messageDB.created;
@@ -73,6 +73,7 @@ namespace ChatterAPI.Controllers
                 }
                 messages.Add(message);
             }
+
             return Ok(messages);
 
             //foreach (var UserContact in userContactsModel.GetAllUserContacts)
@@ -133,7 +134,7 @@ namespace ChatterAPI.Controllers
             MessageDB messageDB = messageDBs.Find(i => i.id == m_id);
             if (messageDB != null)
             {
-                Message toFind = new Message();
+                MessageEntity toFind = new MessageEntity();
                 toFind.id = messageDB.id;
                 toFind.content = messageDB.content;
                 toFind.created = messageDB.created;
@@ -170,7 +171,7 @@ namespace ChatterAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([Bind("content")] Message message, string contact)
+        public IActionResult Create([Bind("content")] MessageEntity message, string contact)
         {
             //message.sent = true;
             //message.created = DateTime.Now;
@@ -223,7 +224,7 @@ namespace ChatterAPI.Controllers
         }
 
         [HttpPut("{m_id}")]
-        public IActionResult Update([Bind("content")] Message message, string contact, int? m_id)
+        public IActionResult Update([Bind("content")] MessageEntity message, string contact, int? m_id)
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             List<string> allContactsId = userContactsModel.GetAllUserContacts(userId);

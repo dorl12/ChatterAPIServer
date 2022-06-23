@@ -3,6 +3,12 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ChatterAPI.Hubs;
 using ChatterAPI;
+using FirebaseAdmin;
+using FirebaseAdmin.Messaging;
+using Google.Apis.Auth.OAuth2;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ChatHub>();
+//builder.Services.AddSingleton<FirebaseService>();
 builder.Services.AddSignalR();  
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {

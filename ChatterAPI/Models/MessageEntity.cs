@@ -1,6 +1,6 @@
 ﻿namespace ChatterAPI
 {
-    public class Message
+    public class MessageEntity
     {
         public int id { get; set; }
         public string? content { get; set; }

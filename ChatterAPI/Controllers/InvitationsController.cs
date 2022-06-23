@@ -1,5 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using ChatterAPI.Hubs;
+using FirebaseAdmin;
+using FirebaseAdmin.Messaging;
+using Google.Apis.Auth.OAuth2;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ChatterAPI.Controllers
 {
@@ -16,6 +22,13 @@ namespace ChatterAPI.Controllers
         public InvitationsController(ChatHub c)
         {
             chatHub = c;
+            if (FirebaseApp.DefaultInstance == null)
+            {
+                FirebaseApp.Create(new AppOptions()
+                {
+                    Credential = GoogleCredential.FromFile("chatter-4d962-firebase-adminsdk-wc8ds-95669a0a7f.json")
+                });
+            }
             //_userDataService = userDataService;
         }
 
@@ -46,28 +59,34 @@ namespace ChatterAPI.Controllers
             contactModel.AddContact(c);
             userContactsModel.AddContactToUser(c.id, inv.to);
             await chatHub.SendMessage(inv.from);
-            return Created("invitation - Contact Added", c);
 
-            //foreach (UserChats userChats in _userDataService.GetAllUsersChats())
-            //{
-            //    if (userChats.Username == inv.to)
-            //    {
-            //        if (userChats.Chats.Where(x => x.ContactUserName.id == inv.from).FirstOrDefault() != null)
-            //        {
-            //            return BadRequest("Contact already exist!");
-            //        }
-            //        Contact c = new Contact();
-            //        c.id = inv.from;
-            //        c.name = inv.from;
-            //        c.server = inv.server;
-            //        c.last = "";
-            //        c.lastdate = new DateTime();
-            //        await chatHub.SendMessage(inv.from);
-            //        userChats.Chats.Add(new Chat() { ContactUserName = c, Messages = new List<Message>() });
-            //        return Created("invitation - Contact Added", c);
-            //    }
-            //}
-            //return NotFound("Username does not in this server");
+            if(FirebaseController.firebaseTokens.ContainsKey(inv.to))
+            {
+                var token = FirebaseController.firebaseTokens[inv.to];
+
+
+                if (token != null)
+                {
+                    var message = new Message()
+                    {
+                        Data = new Dictionary<string, string>()
+                {
+                    { "type", "contact" },
+                },
+                        Token = token,
+                        Notification = new Notification()
+                        {
+                            Title = "From: " + inv.from,
+                            Body = inv.server
+                        }
+
+                    };
+                    FirebaseMessaging.DefaultInstance.SendAsync(message);
+                }
+            }
+            
+
+            return Created("invitation - Contact Added", c);
         }
     };
 }

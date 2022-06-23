@@ -1,5 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using ChatterAPI.Hubs;
+using FirebaseAdmin;
+using FirebaseAdmin.Messaging;
+using Google.Apis.Auth.OAuth2;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ChatterAPI.Controllers
 {
@@ -11,105 +17,100 @@ namespace ChatterAPI.Controllers
         private IUserContactsModel userContactsModel = new UserContactsModel();
         private ImessageDBModel messageDBModel = new MessageDBModel();
         private IChatMessagesModel chatMessagesModel = new ChatMessagesModel();
+        private IUserModel userModel = new UserModel();
         //private readonly IUserDataService _userDataService;
 
         public TransferController(ChatHub c)
         {
             chatHub = c;
+            if (FirebaseApp.DefaultInstance == null)
+            {
+                FirebaseApp.Create(new AppOptions()
+                {
+                    Credential = GoogleCredential.FromFile("chatter-4d962-firebase-adminsdk-wc8ds-95669a0a7f.json")
+                });
+            }
             //_userDataService = userDataService;
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([Bind("to,from,content")] Transfer transfer)
         {
-            //Message message = new Message();
-            //message.sent = false;
-            //message.created = DateTime.Now;
-            //message.content = transfer.content;
-            //string userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            //List<string> allContactsId = userContactsModel.GetAllUserContacts(userId);
-            //if (!allContactsId.Contains(transfer.from))
-            //{
-            //    return NotFound("Contact does not exist!");
-            //}
-            //MessageDB message = new MessageDB();
-            //message.content = transfer.content;
-            //message.created = DateTime.Now;
-            //message.from = transfer.from;
-            //message.to = transfer.to;
-            //int messageId = messageDBModel.AddMessage(message, message.from, message.to);
-            //int userContactId = 0;
-            //List<UserContacts> users = userContactsModel.GetAllUsersContacts();
-            //foreach (var user in users)
-            //{
-            //    if (user.userId == message.to && user.contactId == message.from)
-            //    {
-            //        user.lastMessageId = messageId;
-            //        userContactId = user.id;
-            //    }
-            //}
-            //chatMessagesModel.AddMessage(userContactId, messageId);
-            //string userId = transfer.to;
-            //string contactId = transfer.from;
-            //int lastMessId = 0;
-            //List<string> allContactsId = userContactsModel.GetAllUserContacts(userId);
-            //if (!allContactsId.Contains(contactId))
-            //{
-            //    return NotFound("Contact does not exist!");
-            //}
-            //List<UserContacts> allUserContacts = userContactsModel.GetAllUsersContacts();
-            //foreach (var userContact in allUserContacts)
-            //{
-            //    if (userContact.userId == contactId && userContact.contactId == userId)
-            //    {
-            //        lastMessId = userContact.lastMessageId;
-            //    }
-            //}
-            //UserContacts u = allUserContacts.Find(x => x.userId == userId && x.contactId == contactId);
-            //foreach (var userContact in allUserContacts)
-            //{
-            //    if (userContact.userId == userId && userContact.contactId == contactId)
-            //    {
-            //        userContactsModel.UpdateContact(userContact.id, lastMessId);
-            //        chatMessagesModel.AddMessage(userContact.id, lastMessId);
-            //    }
-            //}
-            //userContactsModel.UpdateContact(u.id, lastMessId);
+        
+             List<string> allContactsId =  userContactsModel.GetAllUserContacts(transfer.to);
+            if (!allContactsId.Contains(transfer.from))
+            {
+                return NotFound("Contact does not exist!");
+            }
+            List<String> allUsersId =  userModel.GetAllUserIds();
+            int newMessageId = -1;
+            if (allUsersId.Contains(transfer.from))
+            {
+                Thread.Sleep(500);
+                List<UserContacts> userContacts =  userContactsModel.GetAllUsersContacts();
+                foreach (var chat in userContacts)
+                {
+                    if (chat.userId == transfer.from && chat.contactId == transfer.to)
+                    {
+                        if (chat.lastMessageId == 0) { chat.lastMessageId = 1; }
+                        //user.lastMessageId = newMessageId;
+                        newMessageId = chat.lastMessageId;
+                    }
+                }
+            } else
+            {
+                MessageDB newMessage = new MessageDB();
+                //newMessage.id = message.id;
+                newMessage.content = transfer.content;
+                newMessage.created = DateTime.Now;
+                newMessage.from = transfer.from;
+                newMessage.to = transfer.to;
+                newMessageId = messageDBModel.AddMessage(newMessage, transfer.from, transfer.to);
+            }
+
+            int userContactId = 0;
+            List<UserContacts> chats = userContactsModel.GetAllUsersContacts();
+            foreach (var chat in chats)
+            {
+                if (chat.userId == transfer.to && chat.contactId == transfer.from)
+                {
+                    //user.lastMessageId = newMessageId;
+                    userContactsModel.UpdateContact(chat.id, newMessageId);
+                    userContactId = chat.id;
+                }
+            }
+            IContactModel contactModel = new ContactModel();
+            //contactModel.UpdateLastMessage(transfer.from, transfer.content, newMessage.created); // REMOVE?
+            chatMessagesModel.AddMessage(userContactId, newMessageId);
+
+            if (FirebaseController.firebaseTokens.ContainsKey(transfer.to))
+            {
+                var token = FirebaseController.firebaseTokens[transfer.to];
+                if (token != null)
+                {
+                    var message = new Message()
+                    {
+                        Data = new Dictionary<string, string>()
+                {
+                    { "type", "message" },
+                },
+                        Token = token,
+                        Notification = new Notification()
+                        {
+                            Title = "From: " + transfer.from,
+                            Body = transfer.content
+                        }
+
+                    };
+                    await FirebaseMessaging.DefaultInstance.SendAsync(message);
+                }
+            }
+
+
             await chatHub.SendMessage(transfer.content);
             return Created("Message sent succesfully!", transfer.content);
 
 
-
-
-
-
-
-
-
-
-
-
-            // old method while using static DB
-
-            //foreach (UserChats userChats in _userDataService.GetAllUsersChats())
-            //{
-            //    if (userChats.username == transfer.to)
-            //    {
-            //        foreach (Chat chat in userChats.chats)
-            //        {
-            //           if (chat.contactUserName.id == transfer.from)
-            //            {
-            //                message.id = -1;
-            //                chat.Messages.Add(message);
-            //                chat.ContactUserName.last = message.content;
-            //                chat.ContactUserName.lastdate = message.created;
-            //                await chatHub.SendMessage(transfer.content);
-            //                return Created("Message sent succesfully!", message);
-            //            }
-            //        }
-            //    }
-            //}
-            //return NotFound("Contact does not exist!");
         }
     };
 }

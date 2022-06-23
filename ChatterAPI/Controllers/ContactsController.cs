@@ -10,6 +10,7 @@ namespace ChatterAPI.Controllers
         //private readonly IUserDataService _userDataService;
         private IUserContactsModel userContactsModel = new UserContactsModel();
         private IContactModel contactModel = new ContactModel();
+        private ImessageDBModel messageDBModel = new MessageDBModel();
 
         //public ContactsController(IUserDataService userDataService)
         //{
@@ -21,12 +22,23 @@ namespace ChatterAPI.Controllers
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type.EndsWith("UserId"))?.Value;
             List<string> allContactsId = userContactsModel.GetAllUserContacts(userId);
+            List<int> allLastMessageIds = userContactsModel.GetAllUserContactLastMessage(userId);
             List<Contact> allContacts = new List<Contact>();
             Contact contact = new Contact();
+            int counter = 0;
             foreach(var contactId in allContactsId)
             {
                 contact = contactModel.GetContact(contactId);
+                if (allLastMessageIds[counter] != 0)
+                {
+                    contact.last = messageDBModel.GetMessage(allLastMessageIds[counter]).content;
+                    contact.lastdate = messageDBModel.GetMessage(allLastMessageIds[counter]).created;
+                } else
+                {
+                    contact.last = "No Messages!";
+                }
                 allContacts.Add(contact);
+                counter++;
             }
             //foreach (UserChats userChats in _userDataService.GetAllUsersChats())
             //{

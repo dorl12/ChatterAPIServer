@@ -5,7 +5,8 @@ namespace ChatterDB
 {
     public class UsersContext : DbContext
     {
-        private const string connectionString = "server=localhost;port=3306;database=ChatterDB;user=root;password=geeksRules22";
+        private const string connectionString = "server=localhost;port=3306;database=ChatterDB;user=yoyo;password=password";
+        //private const string connectionString = "server=localhost;port=3306;database=ChatterDB;user=root;password=geeksRules22";
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

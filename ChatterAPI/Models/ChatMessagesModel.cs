@@ -12,6 +12,18 @@ namespace ChatterAPI
     {
         private static int idCounter = 0;
 
+        public ChatMessagesModel()
+        {
+            using (var db = new UsersContext())
+            {
+                List<ChatMessages> lst = db.ChatMessages.ToList();
+                if (lst.Count > 0)
+                {
+                    idCounter = lst.Count;
+                }
+            }
+        }
+
         // Get all chat messages
         public List<ChatMessages> getAllChatMessages()
         {

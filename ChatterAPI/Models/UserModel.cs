@@ -5,6 +5,7 @@ namespace ChatterAPI
     public interface IUserModel
     {
         List<User> GetAllUsers();
+        List<String> GetAllUserIds();
         User GetUser(string Id);
         void AddUser(User user);
         //void UpdateUser(User user, string id);
@@ -19,6 +20,21 @@ namespace ChatterAPI
             {
                 var users = db.Users.ToList();
                 return users;
+            }
+        }
+
+        // Get all User Ids
+        public List<String> GetAllUserIds()
+        {
+            using (var db = new UsersContext())
+            {
+                var users = db.Users.ToList();
+                var ids = new List<String>();
+                for (int i = 0; i < users.Count; i++)
+                {
+                    ids.Add(users[i].id);
+                }
+                return ids;
             }
         }
 

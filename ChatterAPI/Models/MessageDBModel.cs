@@ -5,13 +5,25 @@ namespace ChatterAPI
     public interface ImessageDBModel
     {
         List<MessageDB> GetAllMessages();
-        MessageDB GetMessage(string id);
+        MessageDB GetMessage(int id);
         int AddMessage(MessageDB message, string contact, string userId);
         void DeleteMessage(int id);
     }
     public class MessageDBModel : ImessageDBModel
     {
         private static int idCounter = 0;
+
+        public MessageDBModel()
+        {
+            using (var db = new UsersContext())
+            {
+                List<MessageDB> lst = db.Messages.ToList();
+                if (lst.Count > 0)
+                {
+                    idCounter = lst.Count;
+                }
+            }
+        }
 
         // Get all messages
         public List<MessageDB> GetAllMessages()
@@ -23,7 +35,7 @@ namespace ChatterAPI
         }
 
         // Get Message
-        public MessageDB GetMessage(string id)
+        public MessageDB GetMessage(int id)
         {
             using (var db = new UsersContext())
             {
